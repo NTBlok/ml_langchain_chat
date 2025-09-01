@@ -3,14 +3,14 @@
 Activate environment
 
 ```bash
-cd "${PROJECT_NAME}/backend"
+cd "ml_langchain_chat/backend"
 source "venv/bin/activate"
 ```
 
 Deactivate environment
 
 ```bash
-cd "${PROJECT_NAME}/backend"
+cd "ml_langchain_chat/backend"
 deactivate
 ```
 
@@ -19,7 +19,7 @@ deactivate
 Install dependencies
 
 ```bash
-cd "${PROJECT_NAME}/frontend"
+cd "ml_langchain_chat/frontend"
 npm install
 ```
 
