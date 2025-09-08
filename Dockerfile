@@ -16,10 +16,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Python dependencies
 COPY backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt jupyter
+RUN pip install --no-cache-dir -r requirements.txt jupyter scikit-learn pandas joblib
 
 # Copy backend code
 COPY backend/ .
+
+# Create models directory and train initial model
+RUN mkdir -p models && \
+    python -c "from train_model import *; train_model()"
 
 # Expose the ports the app runs on
 EXPOSE 8000
