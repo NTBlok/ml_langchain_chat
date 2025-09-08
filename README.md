@@ -14,7 +14,7 @@ A full-stack chat application with machine learning capabilities, built with Fas
 
 ```bash
 git clone <repository-url>
-cd langchain_chat
+cd ml_langchain_chat
 ```
 
 ## Running with Docker Compose
