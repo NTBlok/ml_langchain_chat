@@ -18,8 +18,8 @@ services:
       - "8000:8000"
       - "8888:8888"  # Jupyter port
     command: >
-      sh -c "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=$$JUPYTER_TOKEN --notebook-dir=/app/backend/notebooks & 
-             uvicorn api:app --host 0.0.0.0 --port 8000"
+      sh -c "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=$$JUPYTER_TOKEN --notebook-dir=/app/backend/notebooks &
+             cd /app/backend && uvicorn api:app --host 0.0.0.0 --port 8000 --reload"
     depends_on:
       - llm
     restart: unless-stopped
