@@ -19,10 +19,17 @@ services:
       - "8888:8888"  # Jupyter port
     command: >
       sh -c "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=$$JUPYTER_TOKEN --notebook-dir=/app/backend/notebooks &
-             cd /app/backend && uvicorn api:app --host 0.0.0.0 --port 8000 --reload"
+             cd /app/backend && python -c 'import time; import requests; print(\"Waiting for Ollama to be ready...\"); [time.sleep(5) for _ in range(12) if not requests.get(\"http://llm:11434/api/tags\", timeout=5).ok]' && \
+             uvicorn api:app --host 0.0.0.0 --port 8000 --reload"
     depends_on:
-      - llm
+      llm:
+        condition: service_healthy
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # Frontend service (Vite + React)
   frontend:
@@ -40,12 +47,20 @@ services:
 
   # LLM service (Ollama)
   llm:
-    image: ollama/ollama:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.ollama
     container_name: langchain-chat-llm
     ports:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     restart: unless-stopped
 
 volumes:
